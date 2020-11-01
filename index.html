@@ -1,0 +1,210 @@
+<script src="static/node_modules/chart.js/dist/Chart.js"></script>
+<script src="static/node_modules/chartjs-plugin-annotation/chartjs-plugin-annotation.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script type="text/javascript" src="static/map.js"></script>
+<script type="text/javascript" src="static/person.js"></script>
+<!-- <script type="text/javascript" src="static/particles.js"></script> -->
+<script type="text/javascript" src="static/dropdown.js"></script>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<script>
+  var myChart;
+  var data;
+  var healthy;
+  var aqi;
+
+  var maskTypesString = getLabels();
+  var defaultActivity = 'Light';
+  var defaultDuration = 30;
+
+  var colorNoMask = 'rgba(0,192,0, 1)';
+  var colorClothMask = 'rgba(192,192,192)';
+  var colorN95 = 'rgba(192,192,192)';
+
+  loadFirstAqiDataAndInitVisualization();
+</script>
+
+<!-- <div class="count-particles"> <span class="js-count-particles"> -->
+<!-- </span> particles </div> particles.js lib - https://github.com/VincentGarreau/particles.js -->
+<!-- <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>  -->
+<script src="https://threejs.org/examples/js/libs/stats.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+
+<!-- <link rel="stylesheet" type="text/css" href="particles.css"> -->
+<!-- <link rel="stylesheet" type="text/css" href="person.css"> -->
+
+<html>
+<style>
+  .references{
+    text-align: center;
+  }
+
+</style>
+<!-- <div id="particles-js"></div> -->
+
+<div class='container fluid'>
+
+    <div class='row content'>
+        <div class="col text-center">
+          <h1> How bad is pollution for you? </h1>
+          <h4 id='locationName'></h4>
+        </div class="col text-center">
+     </div class='row content'>
+
+    <!--  <div class='row content'>
+        <div class="col text-center">
+            <div class="human">
+              <div class="head"></div>
+              <div class="body"></div>
+              <div class="arm left">
+                <div class="limb upper"></div>
+                <div class="limb lower"></div>
+              </div>
+              <div class="arm right">
+                <div class="limb upper"></div>
+                <div class="limb lower"></div>
+              </div>
+              <div class="leg left">
+                <div class="limb upper"></div>
+                <div class="limb lower">
+                  <div class="limb foot"></div>
+                </div>
+              </div>
+              <div class="leg right">
+                <div class="limb upper"></div>
+                <div class="limb lower">
+                  <div class="limb foot"></div>
+                </div>
+              </div>
+              <div class="limb easterEgg"></div>
+            </div>
+        </div class="col text-center">
+     </div class='row content'> -->
+
+    <div id = 'my_form'>
+        <form>
+          <div class="form-row">
+              <div class="col-md-4 mb-3">
+                 <label for="activity" style="font-size:17px;">Activity</label>
+                 <select id="activity" class="form-control form-control-sm" required>
+                     <option value="Light">Light</option>
+                     <option value="Medium">Medium</option>
+                     <option value="Strenuous">Strenuous</option>
+                  </select>
+              </div>
+              <div class="col-md-4 mb-3">
+                 <label for="timeSpent" style="font-size:17px;"> Traveling time (Minutes):</label>
+                 <input id="timeSpent" class="form-control form-control-sm" type="text" value="30" >
+                 <div class="valid-tooltip">
+                     Looks good!
+                 </div>
+               </div>
+               <div class="col-md-4 mb-3">
+                  <label for="selectedMask" style="font-size:17px;"> Mask </label>
+                  <select id="selectedMask" class="form-control form-control-sm">
+                     <option value="noMask">No Mask</option>
+                     <option value="clothMask">Cloth Mask</option>
+                     <option value="n95">N95</option>
+                   </select>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="col-md-4 mb-3">
+                   <label for="country" style="font-size:17px;"> Country </label>
+                   <select id="country" class="form-control form-control-sm" onchange="getSupportedStates(this.value)">
+                      <option id="defaultCountry" value="defaultCountry">*Select Country*</option>
+                   </select>
+                </div>
+                <div class="col-md-4 mb-3">
+                   <label for="state" style="font-size:17px;"> State </label>
+                   <select id="state" class="form-control form-control-sm" onchange="getSupportedCities(this.value)">
+                   </select>
+                </div>
+                <div class="col-md-4 mb-3">
+                   <label for="city" style="font-size:17px;"> City </label>
+                   <select id="city" class="form-control form-control-sm" onchange="defaultCityRemove()">
+                   </select>
+                </div>
+            </div>
+            <div class="form-row">
+              <div class="col text-center">
+                <button type="button" class="btn btn-primary" onclick="loadAqiOnButtonClick()">Submit</button>
+              </div class="col text-center">
+            </div class="form-row">
+        </form>
+    </div id = 'my_form'>
+
+    <div class='row content'>
+        <div class="col text-center">
+          <div id='aqi_chart' >
+            <div id='chart'>
+              <canvas id="myChart"></canvas>
+            </div>
+          </div id='aqi_chart'>
+        </div class="col text-center">
+    <br>
+    </div class='row content'>
+    <div class='row content'>
+        <h3>  &nbsp </h3>
+    </div class='row content'>
+    <div class='row content'>
+        <div class="col text-center">
+           <h1> Insights from Research </h1>
+           <h4 id='locationName'></h4>
+        </div class="col text-center">
+    </div class='row content'>
+    <div class='row content'>
+          <!-- <p style="font-size:30">Research Conclusions:</p> -->
+          <p> Assumptions during calculation:</p>
+          <ul>
+            <li>Cloth Mask reduces inhaled particles by 15% (Cherrie, 2018).</li>
+            <li>N95 Mask reduces inhaled particles by 95% (Cherrie, 2018).</li>
+            <li>Light activity corresponds to inhalation rate of 30 liters per minute (eg. Walking) (Cherrie, 2018) </li>
+            <li>Medium activity corresponds to inhalation rate of 50 liters per minute (eg. Walking with backpack) (Cherrie, 2018) </li>
+            <li>Strenuous activity corresponds to inhalation rate of 80 liters per minute (eg. Running) (Cherrie, 2018) </li>
+            <li>Maximum healthy level is the total PM <sub> 2.5 </sub> inhaled under light activity and the input duration at an AQI of 100 </li>
+          </ul>
+          <p style="margin-top:13px"> The following formula was used to calculate concentration "C" (Mintz, 2016) :</p>
+          
+    </div class='row content'>
+    <div class='row content'>
+        <img src="./research/f1.png" alt="Formula 1" width="330" height="60">
+        <ul>
+            <li> Where <i> I </i> is the AQI </li>
+            <li> <i> C </i> is the PM <sub> 2.5 </sub> concentration </li>
+            <li> <i> C <sub> low </sub> </i> is the concentration threshold less than or equal to <i> C </i> </li>
+            <li> <i> C <sub> high </sub> </i> is the concentration threshold more than or equal to <i> C </i> </li>
+            <li> <i> I <sub> low </sub> </i> is the AQI threshold corresponding to <i> C <sub> low </sub> </i> </li>
+            <li> <i> I <sub> high </sub> </i> is the AQI threshold corresponding to <i> C <sub> high </sub> </i> </li>
+          </ul>
+    </div class='row content'>
+    <div class='row content'>
+        <h3>  &nbsp </h3>
+    </div class='row content'>
+    <div class='row content'>
+        <div class="col text-center">
+           <h1> References </h1>
+        </div class="col text-center">
+    </div class='row content'>
+    <div class='row content' style="margin-left: 250px ">
+          <p>Cherrie, J., Apsley, A., Cowie, H., Steinle, S., Mueller, W., Lin, C., Loh, M. (2018, June). <br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Effectiveness of face masks used to protect Beijing residents against particulate air <br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; pollution. Retrieved July 25, 2020, from <br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5969371/ </p>    
+          <p>Mintz, D. (2016, May). Technical Assistance Document for the Reporting of Daily Air Quality – <br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; the Air Quality Index (AQI). Retrieved October 25, 2020, from  <br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; https://www.airnow.gov/sites/default/
+          files/2018-05/aqi-technical-assistance-document-may2016.pdf</p>   
+          <p> Shakya, K., Noyes, A., Kallin, R., & Peltier, R. (2016). Evaluating the efficacy of cloth facemasks  <br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; in reducing particulate matter exposure. Retrieved October 25, 2020, from  https://www.ceh.org.in/wp-content/ <br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; uploads/2017/08/1-Shakaya-Face-Masks-JESEE-2016.pdf </p>   
+         
+          
+
+    </div class='row content'>
+    
+
+</div class='container'>
+</html>
