@@ -179,6 +179,19 @@
             <li> <i> I <sub> low </sub> </i> is the AQI threshold corresponding to <i> C <sub> low </sub> </i> </li>
             <li> <i> I <sub> high </sub> </i> is the AQI threshold corresponding to <i> C <sub> high </sub> </i> </li>
           </ul>
+          <p style="margin-top:13px"> The following self-devised formula operates based on the observation that the total inhaled PM 2.5 is proportional to duration of exposure, inhalation rate, mask index, and concentration of PM <sub> 2.5 </sub>:</p>
+    </div class='row content'>
+    <div class='row content'>
+        <img src="./research/f2.png" alt="Formula 2" width="206" height="58">
+
+        <ul>
+            <li> Where <i> P </i> is quantity of inhaled PM 2.5 (Micrograms) </li>
+            <li> <i> A </i> is the inhalation rate in liters per minute (corresponding to the chosen activity) </li>
+            <li> <i> M </i> is the mask index, with a range of 0 to 1, denoting the proportion of PM 2.5 filtered by the chosen mask </li>
+            <li> <i> C </i> is the PM <sub> 2.5 </sub> concentration </li>
+            <li> <i> T </i> is the duration of exposure to AQI </li>
+            <li> Lastly, divide by 1000 to convert <i> C </i> from microgram per cubic meter to microgram per liter </li>
+          </ul>
     </div class='row content'>
     <div class='row content'>
         <h3>  &nbsp </h3>
