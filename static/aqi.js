@@ -1,4 +1,4 @@
-var key = "28b76057-00b8-4fd0-b3a2-8dec32ad5459"
+var key = "c773d343-be0a-48e7-9011-fe0bec15a266"
 var city = "Bangkok";
 var country = "Thailand";
 var aqi;

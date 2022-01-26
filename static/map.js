@@ -144,7 +144,7 @@ function convertMicroGramPerCubicMetreToMicroGramPerLiter(concentration) {
 
 function loadFirstAqiDataAndInitVisualization() {
 
-    var key = "28b76057-00b8-4fd0-b3a2-8dec32ad5459"
+    var key = "c773d343-be0a-48e7-9011-fe0bec15a266"
     var aqi;
     var settings = {
       "url": "https://api.airvisual.com/v2/nearest_city?key="+key,
@@ -171,7 +171,7 @@ function loadFirstAqiDataAndInitVisualization() {
 
   function loadAqiOnButtonClick() {
 
-      var key = "28b76057-00b8-4fd0-b3a2-8dec32ad5459"
+      var key = "c773d343-be0a-48e7-9011-fe0bec15a266"
       var aqi;
       var city = document.getElementById("city").value;
       var state = document.getElementById("state").value;
@@ -204,7 +204,7 @@ function loadFirstAqiDataAndInitVisualization() {
     }
 
 function getSupportedCountries(){
-    var key = "28b76057-00b8-4fd0-b3a2-8dec32ad5459"
+    var key = "c773d343-be0a-48e7-9011-fe0bec15a266"
     var aqi;
     var settings = {
       "url": "https://api.airvisual.com/v2/countries?key="+key,
@@ -310,7 +310,7 @@ function cityBoxReset(){
 }
 
 function getSupportedStates(country) {
-    var key = "28b76057-00b8-4fd0-b3a2-8dec32ad5459"
+    var key = "c773d343-be0a-48e7-9011-fe0bec15a266"
     var settings = {
       "url": "https://api.airvisual.com/v2/states?country="+country+"&key="+key,
       "method": "GET",
@@ -341,7 +341,7 @@ function getSupportedStates(country) {
   }
 
 function getSupportedCities(state) {
-  var key = "28b76057-00b8-4fd0-b3a2-8dec32ad5459"
+  var key = "c773d343-be0a-48e7-9011-fe0bec15a266"
   var country = document.getElementById("country").value;
   var settings = {
     "url": "https://api.airvisual.com/v2/cities?state="+state+"&country="+country+"&key="+key,
